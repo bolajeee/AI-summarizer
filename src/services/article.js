@@ -18,8 +18,10 @@ export const articleApi = createApi({
   }),
   endpoints: (builder) => ({
     getSummary: builder.query({
-      query: (params) =>
-        `/summarize?url=${encodeURIComponent(params.articleUrl)}&length=3`,
+      query: (params) => {
+        const summaryLength = params.length || 3;
+        return `/summarize?url=${encodeURIComponent(params.articleUrl)}&length=${summaryLength}`;
+      },
     }),
   }),
 });

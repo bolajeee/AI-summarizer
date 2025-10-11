@@ -8,19 +8,24 @@ const Demo = () => {
     summary: "",
   });
 
-  const [copied, setCopied] = useState("second");
+  const [copied, setCopied] = useState(false);
 
   const [allArticles, setAllArticles] = useState([]);
+  const [summaryLength, setSummaryLength] = useState(3);
 
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
 
   useEffect(() => {
-    const articlesFromLocalStorage = JSON.parse(
-      localStorage.getItem("articles")
-    );
+    try {
+      const articlesFromLocalStorage = JSON.parse(
+        localStorage.getItem("articles")
+      );
 
-    if (articlesFromLocalStorage) {
-      setAllArticles(articlesFromLocalStorage);
+      if (articlesFromLocalStorage) {
+        setAllArticles(articlesFromLocalStorage);
+      }
+    } catch (error) {
+      console.error("Error parsing articles from localStorage:", error);
     }
   }, []);
 
@@ -29,6 +34,7 @@ const Demo = () => {
 
     const { data } = await getSummary({
       articleUrl: article.url,
+      length: summaryLength,
     });
 
     if (data?.summary) {
@@ -55,11 +61,13 @@ const Demo = () => {
     <section className="mt-16 w-full max-w-xl">
       {/* Search */}
       <div className="flex flex-col w-full gap-2">
-        <form
-          className="relative flex justify-center items-center"
+        <div>
+          <form
+          className="flex flex-col gap-2"
           onSubmit={handleSubmit}
         >
-          <img
+          <div className="relative flex items-center">
+            <img
             src={linkIcon}
             alt="link_icon"
             className="absolute left-0 my-2 ml-3 w-5"
@@ -82,32 +90,49 @@ const Demo = () => {
             className="submit_btn peer-focus:border-gray-700
             peer-focus:text-gray-element"
           >
-            ✔
+            Go
           </button>
+          </div> {/* Closing the new wrapper div */}
+          <input
+            type="number"
+            placeholder="Enter summary length (1-10 sentences)"
+            value={summaryLength}
+            onChange={(e) => setSummaryLength(Number(e.target.value))}
+            min="1"
+            max="10" // Assuming a reasonable max length
+            className="url_input mt-2" // Reusing url_input style, adding margin-top
+          />
         </form>
 
         {/* Browser URL history */}
         <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
-          {allArticles.map((item, index) => (
-            <div
-              key={`link-${index}`}
-              onClick={() => {
-                setArticle(item);
-              }}
-              className="link_card"
-            >
-              <div className="copy_btn" onClick={() => handleCopy(item.url)}>
-                <img
-                  src={copied === item.url ? tick : copy}
-                  alt="copy_icon"
-                  className="w-[40%] h-[40%] object-contain"
-                />
+          {allArticles.length === 0 ? (
+            <p className="font-inter font-medium text-gray-500 text-center mt-4">
+              No summary history yet. Start by entering a URL above!
+            </p>
+          ) : (
+            allArticles.map((item) => (
+              <div
+                key={item.url}
+                onClick={() => {
+                  setArticle(item);
+                }}
+                className="link_card"
+              >
+                <div className="copy_btn" onClick={() => handleCopy(item.url)}>
+                  <img
+                    src={copied === item.url ? tick : copy}
+                    alt="copy_icon"
+                    className="w-[40%] h-[40%] object-contain"
+                  />
+                </div>
+                <p className="flex-1 font-satoshi text-blue-700 font-medium text-sm truncate">
+                  {item.url}
+                </p>
               </div>
-              <p className="flex-1 font-satoshi text-blue-700 font-medium text-sm truncate">
-                {item.url}
-              </p>
-            </div>
-          ))}
+            ))
+          )}
+        </div>
         </div>
       </div>
 
@@ -134,9 +159,7 @@ const Demo = () => {
                 Article <span className="blue_gradient">Summary</span>
               </h2>
               <div className="font-inter font-medium text-sm text-gray-700">
-                <p className="font-inter font-medium text-sm text-gray-700">
-                  {article.summary}
-                </p>
+                {article.summary}
               </div>
             </div>
           )
