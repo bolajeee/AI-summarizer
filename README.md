@@ -129,5 +129,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 *(Note: You might need to create a `LICENSE` file if you haven't already.)*
 
 ## Contact
-Your Name - [your_email@example.com](mailto:your_email@example.com)
-Project Link: [https://github.com/your-username/AI-summarizer](https://github.com/your-username/AI-summarizer)
+Your Name - ibrahimomobolaji1999@gmail.com
+Project Link: [https://github.com/bolajeee/AI-summarizer](https://github.com/bolajeee/AI-summarizer)
