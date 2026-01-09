@@ -131,3 +131,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Contact
 Your Name - ibrahimomobolaji1999@gmail.com
 Project Link: [https://github.com/bolajeee/AI-summarizer](https://github.com/bolajeee/AI-summarizer)
+Project walkthrough Video Link: https://youtu.be/s0omQt-xCwg
