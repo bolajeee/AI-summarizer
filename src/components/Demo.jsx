@@ -158,8 +158,10 @@ const Demo = () => {
               <h2 className="font-satoshi font-bold text-gray-600 text-xl">
                 Article <span className="blue_gradient">Summary</span>
               </h2>
-              <div className="font-inter font-medium text-sm text-gray-700">
-                {article.summary}
+              <div className="summary_box">
+                {article.summary.split('\n').map((paragraph, index) => (
+                  <p key={index} className="mb-3">{paragraph}</p>
+                ))}
               </div>
             </div>
           )
